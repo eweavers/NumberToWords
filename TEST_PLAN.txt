@@ -1,0 +1,28 @@
+Test plan
+=========
+
+What's covered: the actual conversion logic (NumberToWordsConverter's ConvertWithDecimals), which is the thing the api actually hands back. Plus a manual checklist for the interactive/frontend side, since automating a browser for something this small felt like overkill.
+
+Automated tests:
+
+One test method, a bunch of inline cases, covering stuff like:
+- zero, and singular vs plural ("one dollar" vs "forty-five dollars")
+- cents left off entirely when there aren't any
+- the actual example straight from the spec (123.45)
+- rounding that carries into the whole number (0.996 -> "one dollar", not
+  "zero dollars and 100 cents")
+- bigger numbers that pull in multiple groups and a comma
+- negative amounts
+
+Run them with: dotnet test, from the repo root, or point it directly at the test project's csproj if you just want that one.
+
+To add a new case later, just drop another InlineData line into the Currency_formatting test in NumberToWordsConverterTests.cs.
+
+Manual checklist:
+
+1. run the api locally, open the page, type 123.45, make sure it shows up right after the short pause
+2. clear the input should go back to "waiting for a number"
+3. type something that isn't a number, like "abc" should show a clean error
+4. type something way too big (past 10^18) should get the "too large" error
+5. stop the api and try typing something page should say it can't reach it
+6. once it's actually deployed (GitHub Pages hitting the real api), double check it still works

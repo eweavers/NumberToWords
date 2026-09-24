@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Number to Words</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main class="sheet">
+    <header class="sheet__head">
+      <h1>Number to words</h1>
+      <p class="sheet__sub">Type a number. It's converted on the other side, digit by digit.</p>
+    </header>
+
+    <section class="entry">
+      <label for="numberInput" class="entry__label">Number</label>
+      <input
+        id="numberInput"
+        class="entry__input"
+        type="text"
+        inputmode="decimal"
+        placeholder="1234.56"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </section>
+
+    <section class="output" aria-live="polite">
+      <p id="wordsOutput" class="output__words">Waiting for a number.</p>
+      <p id="errorOutput" class="output__error" hidden></p>
+    </section>
+
+    <footer class="sheet__foot">
+      <p class="sheet__foot-label">API</p>
+      <p id="apiBaseDisplay" class="sheet__foot-value"></p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

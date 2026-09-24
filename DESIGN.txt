@@ -1,0 +1,41 @@
+Design notes
+============
+
+The ask: take a number, output it in words, formatted like a check amount - "123.45" -> "ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS".
+
+What I built:
+
+A C# minimal api that does the actual conversion, plus a plain html/css/js page that calls it. No frontend framework, no build step, just fetch().
+
+The conversion itself: split the number into groups of 3 digits, turn each group into words, stick "AND" between the hundreds word and whatever's left in that group (that's the British-style reading the spec wants), join groups above the first with commas, then wrap the whole thing as currency - add "DOLLAR"/"DOLLARS" after the whole number part, "AND ... CENT/CENTS" after that if there's cents, and uppercase everything at the end.
+
+Research:
+I did have to research backend hosting solutions and came across Render and utilised it.
+
+Why this setup:
+
+- the conversion logic is a plain static class with no dependencies, so it's trivial to unit test directly, no server needed to spin up
+- wanted an actually interactive page, not just a swagger/docs page - the brief specifically asks for something you can test interactively
+- didn't see a reason to over-structure this - it's really one function, so one api project plus one static frontend felt like the right amount of code for the job, not more, not less
+
+Stuff I considered and didn't go with:
+
+Doing the whole conversion in JavaScript on the frontend and skipping the api. Would've meant no cors and no separate hosting. But the brief wants the actual solution in C#, so if the logic lived in JS there'd be no C# solution to actually look at.
+
+A "proper" layered structure - controllers, services, models, an injected interface. Built this version first, honestly. Ended up ripping it out because the interface only ever had one implementation that never changed it wasn't buying anything, just more files to read through for no benefit. The plain static class tests exactly as well.
+
+Recursion instead of a loop for grouping the digits. Would work fine, but a loop reads simpler to me and there's no risk of it choking on some huge
+input.
+
+Hosting the api and frontend together on something like Azure Static Web Apps with linked Functions. Would dodge the two-hosts problem, but ties the
+api specifically to Azure's function model. Wanted something that runs on basically any host that can run .NET.
+
+Brief says C# preferred
+
+Known limits:
+
+Notes:
+
+- handles numbers up to about 10^18, anything bigger just gets rejected with an error
+- decimals only go two places, treated as cents
+- cors on the api is wide open right now, fine for a demo, would lock it down for anything real
